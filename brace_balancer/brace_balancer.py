@@ -1,41 +1,45 @@
-class BraceBalancer:
-    def __init__(self):
-        self.stack = []
-        self.brace_pairs = {
-            '(': ')',
-            '[': ']',
-            '{': '}',
-        }
+brace_pairs = {
+    '(': ')',
+    '[': ']',
+    '{': '}',
+}
 
-    def is_balanced(self, string):
-        for char in string:
-            if self.__is_opening_brace(char):
-                self.__push(char)
-            elif self.__is_closing_brace(char):
-                is_ok = self.__pop(char)
-                if is_ok is False:
-                    return False
+def are_braces_balanced(input_string):
+    """Checks wether the braces passed in the input string
+    are balanced or not and returns True or False respectively.
+    """
+    if not isinstance(input_string, str):
+        raise ValueError("passed parameter should be a string")
 
-        if len(self.stack) == 0:
-            return True
-        else:
-            return False
+    stack = []
+    for char in input_string:
+        if _is_opening_brace(char):
+            _push(stack, char)
+        elif _is_closing_brace(char):
+            is_matching_brace = _pop(stack, char)
+            if not is_matching_brace:
+                return False
 
-    def __is_opening_brace(self, brace):
-        return brace in self.brace_pairs
+    if len(stack) == 0:
+        return True
+    else:
+        return False
 
-    def __is_closing_brace(self, brace):
-        return brace in self.brace_pairs.values()
+def _is_opening_brace(brace):
+    return brace in brace_pairs
 
-    def __push(self, brace):
-        self.stack.append(brace)
+def _is_closing_brace(brace):
+    return brace in brace_pairs.values()
 
-    def __pop(self, brace):
-        if len(self.stack) == 0:
-            return False
+def _push(stack, brace):
+    stack.append(brace)
 
-        last_brace = self.stack.pop()
-        if (self.brace_pairs[last_brace] == brace):
-            return True
-        else:
-            return False
+def _pop(stack, closing_brace):
+    if len(stack) == 0:
+        return False
+
+    last_brace = stack.pop()
+    if (brace_pairs[last_brace] == closing_brace):
+        return True
+    else:
+        return False

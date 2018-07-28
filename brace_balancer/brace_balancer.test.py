@@ -1,36 +1,41 @@
 import unittest
-from brace_balancer import BraceBalancer
+from brace_balancer import are_braces_balanced
 
 class TestBraceBalancer(unittest.TestCase):
+    def test_wrong_input_throws(self):
+        self.assertRaises(ValueError, are_braces_balanced, [])
+
     def test_empty_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced('')
+        is_balanced = are_braces_balanced('')
         self.assertTrue(is_balanced)
 
     def test_simple_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced('()')
+        is_balanced = are_braces_balanced('()')
         self.assertTrue(is_balanced)
 
+    def test_reverse_order_braces(self):
+        is_balanced = are_braces_balanced(')(')
+        self.assertFalse(is_balanced)
+
+    def test_non_matching_braces(self):
+        is_balanced = are_braces_balanced('(]')
+        self.assertFalse(is_balanced)
+
     def test_simple_imbalanced_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced('([]')
+        is_balanced = are_braces_balanced('([]')
         self.assertFalse(is_balanced)
 
     def test_very_imbalanced_closing_brace_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced('))))))))))))')
+        is_balanced = are_braces_balanced('))))))))))))')
         self.assertFalse(is_balanced)
 
     def test_very_imbalanced_opening_brace_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced('(((((((((((((')
+        is_balanced = are_braces_balanced('(((((((((((((')
         self.assertFalse(is_balanced)
 
 
     def test_complex_input(self):
-        balancer = BraceBalancer()
-        is_balanced = balancer.is_balanced("""
+        is_balanced = are_braces_balanced("""
         Python {is an easy to [learn]}, (powerful programming language. It)
         has efficient high­level [(data structures) and a simple but
         effective approach to object­oriented programming]. Python’s elegant

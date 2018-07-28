@@ -3,17 +3,17 @@ from time import time
 class CacheDecorator(object):
     """
     A decorator that stores the result of a function call and returns the cached version in
-    subsequent calls (with the same parameters) for 'ttl' minutes, or 'noc' times ­­ whichever comes
-    first.
+    subsequent calls (with the same parameters) for 'ttl' seconds (default is 5 minutes), or 'call_limit' times ­­(default is 10 times),
+    whichever comes first.
     """
-    def __init__(self, ttl = 5, noc = 10):
-        self.noc = noc
-        self.ttl = ttl * 60
+    def __init__(self, ttl_seconds = 5 * 60, call_limit = 10):
+        self.call_limit = call_limit
+        self.ttl_seconds = ttl_seconds
         self.cache = {}
 
     def __call__(self, func, *args, **kwargs):
         def new_func(*args, **kwargs):
-            cache_key = str(args) + str(kwargs)
+            cache_key = self.__generate_key(*args, **kwargs)
             is_cache_missing = self.__is_cached(cache_key) == False
         
             if (is_cache_missing):
@@ -23,6 +23,8 @@ class CacheDecorator(object):
 
         return new_func
 
+    def __generate_key(*args, **kwargs):
+        return str(args) + str(kwargs)
 
     def __clean_cache(self, cache_key):
         self.cache.pop(cache_key)
@@ -31,13 +33,13 @@ class CacheDecorator(object):
         if (cache_key not in self.cache):
             return False
 
-        if (self.cache[cache_key]['call_count'] <= 0):
+        if (self.cache[cache_key]['left_calls'] <= 0):
             self.__clean_cache(cache_key)
             return False
 
-        t = time()
-        cache_time = t - self.cache[cache_key]['creation_time']
-        if (cache_time >= self.ttl):
+        cached_time = time() - self.cache[cache_key]['cached_time']
+
+        if (cached_time >= self.ttl_seconds):
             self.__clean_cache(cache_key)
             return False
 
@@ -45,11 +47,11 @@ class CacheDecorator(object):
 
     def __cache(self, cache_key, func, *args, **kwargs):
         self.cache[cache_key] = {
-            'result': func(*args, **kwargs),
-            'call_count': self.noc,
-            'creation_time': time()
+            'result_value': func(*args, **kwargs),
+            'left_calls': self.call_limit,
+            'cached_time': time()
         }
 
     def __get_from_cache(self, cache_key):
-        self.cache[cache_key]['call_count'] -= 1
-        return self.cache[cache_key]['result']
+        self.cache[cache_key]['left_calls'] -= 1
+        return self.cache[cache_key]['result_value']
