@@ -42,7 +42,8 @@ John Anderson 4321
 ```
 
 **Extension #1:** sort output entries by the ID number
-**Extension #2:** input data is too big to fit into main memory.
+
+**Extension #2:** input data is too big to fit into main memory
 
 ## Approach to the problem
 
