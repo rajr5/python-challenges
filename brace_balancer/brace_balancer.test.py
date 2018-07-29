@@ -1,6 +1,7 @@
 import unittest
 from brace_balancer import are_braces_balanced
 
+
 class TestBraceBalancer(unittest.TestCase):
     def test_wrong_input_throws(self):
         self.assertRaises(ValueError, are_braces_balanced, [])
@@ -33,7 +34,6 @@ class TestBraceBalancer(unittest.TestCase):
         is_balanced = are_braces_balanced('(((((((((((((')
         self.assertFalse(is_balanced)
 
-
     def test_complex_input(self):
         is_balanced = are_braces_balanced("""
         Python {is an easy to [learn]}, (powerful programming language. It)
@@ -44,6 +44,7 @@ class TestBraceBalancer(unittest.TestCase):
         development in many areas on most platforms.
         """)
         self.assertTrue(is_balanced)
+
 
 if __name__ == '__main__':
     unittest.main()

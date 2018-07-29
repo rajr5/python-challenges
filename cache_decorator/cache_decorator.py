@@ -1,12 +1,15 @@
 from time import time
 
+
 class CacheDecorator(object):
     """
-    A decorator that stores the result of a function call and returns the cached version in
-    subsequent calls (with the same parameters) for 'ttl' seconds (default is 5 minutes), or 'call_limit' times ­­(default is 10 times),
-    whichever comes first.
+    A decorator that stores the result of a function call and
+    returns the cached version in subsequent calls (with the same parameters)
+    for 'ttl' seconds (default is 5 minutes), or
+    'call_limit' times ­­(default is 10), whichever comes first.
     """
-    def __init__(self, ttl_seconds = 5 * 60, call_limit = 10):
+
+    def __init__(self, ttl_seconds=5 * 60, call_limit=10):
         self.call_limit = call_limit
         self.ttl_seconds = ttl_seconds
         self.cache = {}
@@ -14,9 +17,8 @@ class CacheDecorator(object):
     def __call__(self, func, *args, **kwargs):
         def new_func(*args, **kwargs):
             cache_key = self.__generate_key(*args, **kwargs)
-            is_cache_missing = self.__is_cached(cache_key) == False
-        
-            if (is_cache_missing):
+
+            if (not self.__is_cached(cache_key)):
                 self.__cache(cache_key, func, *args, **kwargs)
 
             return self.__get_from_cache(cache_key)

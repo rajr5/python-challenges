@@ -4,6 +4,7 @@ brace_pairs = {
     '{': '}',
 }
 
+
 def are_braces_balanced(input_string):
     """Checks wether the braces passed in the input string
     are balanced or not and returns True or False respectively.
@@ -25,14 +26,18 @@ def are_braces_balanced(input_string):
     else:
         return False
 
+
 def _is_opening_brace(brace):
     return brace in brace_pairs
+
 
 def _is_closing_brace(brace):
     return brace in brace_pairs.values()
 
+
 def _push(stack, brace):
     stack.append(brace)
+
 
 def _pop(stack, closing_brace):
     if len(stack) == 0:

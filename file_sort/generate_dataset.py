@@ -1,6 +1,7 @@
 import random
 import os
 
+
 def main():
     dataset_size = 100_000_000
     ids = []
@@ -23,6 +24,7 @@ def main():
     with open(input_2_path, "w") as file:
         for x in ids:
             file.write("b{0} {0}\n".format(x))
+
 
 if __name__ == '__main__':
     main()
