@@ -1,4 +1,4 @@
-# Solutions
+# Python Challenges
 
 Solutions are grouped into directories, each one has:
 
