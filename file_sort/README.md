@@ -24,7 +24,7 @@ with the format:
 <first name> <last name> <ID number>
 ```
 
-*Example input:*
+**Example input:**
 
 ```
 Adam 1234
@@ -34,15 +34,15 @@ Anderson 4321
 Smith 1234
 ```
 
-*Expected output:*
+**Expected output:**
 
 ```
 Adam Smith 1234
 John Anderson 4321
 ```
 
-*Extension #1:* sort output entries by the ID number
-*Extension #2:* input data is too big to fit into main memory.
+**Extension #1:** sort output entries by the ID number
+**Extension #2:** input data is too big to fit into main memory.
 
 ## Approach to the problem
 
