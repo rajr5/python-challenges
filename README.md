@@ -6,6 +6,8 @@ Solutions are grouped into directories, each one has:
 - `[solution_name].py` containing the solution to the problem
 - `[solution_name].test.py` a couple of unit tests to present the solutions are working fine
 
+Since file_sort is a bit less of an algoritmic problem and it's long running, it's not really feasible for testing.
+
 ## Python version
 
 The code was written and tested with Python 3.7
