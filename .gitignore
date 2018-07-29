@@ -155,3 +155,8 @@ venv.bak/
 
 
 # End of https://www.gitignore.io/api/osx,linux,python
+
+# Ignore input and output files from file_sort dir
+file_sort/input1.txt
+file_sort/input2.txt
+file_sort/output.txt

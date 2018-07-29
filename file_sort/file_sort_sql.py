@@ -2,45 +2,70 @@ import sqlite3
 import os
 
 def main():
-    db = './db.sqlite'
-    conn = sqlite3.connect(db)
-    cursor = conn.cursor()
+    database_name = 'db.sqlite'
+    connection = _setup_db(database_name)
+    _insert_data(connection, 'input1.txt', 'input2.txt')
+    _output_sorted_data(connection, 'output.txt')
+    _cleanup_db(database_name, connection)
 
-    drop_people_table = """
-    DROP TABLE IF EXISTS people
+def _setup_db(database_name):
+    drop_people_table = "DROP TABLE IF EXISTS people"
+    create_people_table = """
+    CREATE TABLE people (
+        id integer PRIMARY KEY,
+        first_name text,
+        last_name text)
     """
+    connection = sqlite3.connect(database_name)
+
+    cursor = connection.cursor()
 
     cursor.execute(drop_people_table)
-
-    create_people_table = """
-    CREATE TABLE IF NOT EXISTS people (
-         id integer PRIMARY KEY,
-         first_name text,
-         last_name text)"""
-
     cursor.execute(create_people_table)
 
-    with open('file1.txt') as f:
+    return connection
+
+def _insert_data(connection, first_names_file, last_names_file):
+    add_first_name_statement = """
+        insert into people(id, first_name)
+        values (?, ?)
+    """
+    add_last_name_statement = """
+        update people set last_name = ? where id = ?
+    """
+    cursor = connection.cursor()
+    first_names_file_path = _get_absolute_file_path(first_names_file)
+    last_names_file_path = _get_absolute_file_path(last_names_file)
+
+    with open(first_names_file_path) as f:
         for entry in f:
             first_name, id = entry.split()
-            cursor.execute("insert into people(id, first_name) values (?, ?)", (id, first_name))
-            
-    with open('file2.txt') as f:
+            cursor.execute(add_first_name_statement, (id, first_name))
+
+    with open(last_names_file_path) as f:
         for entry in f:
             last_name, id = entry.split()
-            cursor.execute("insert or replace into people(id, last_name, first_name) values (?, ?, (select first_name from people where id = ?))", (id, last_name, id))
+            cursor.execute(add_last_name_statement, (last_name, id))
 
-    cursor.execute("select id, first_name, last_name from people order by id")
-    with open("file_output.txt", "w") as f:
-        for id, first_name, last_name in cursor.fetchall():
+def _output_sorted_data(connection, output_file_name):
+    cursor = connection.cursor()
+    output_file_path = _get_absolute_file_path(output_file_name)
+
+    with open(output_file_path, "w") as f:
+        for row in cursor.execute('select id, first_name, last_name from people order by id'):
+            id, first_name, last_name = row
             entry = "{0} {1} {2}".format(first_name, last_name, id)
             f.write("{0}\n".format(entry))
 
-    cursor.execute(drop_people_table)
-    conn.commit()
-    conn.close()
-    os.remove(db)
+def _cleanup_db(database_name, connection):
+    cursor = connection.cursor()
+    connection.commit()
+    connection.close()
+    os.remove(database_name)
 
+def _get_absolute_file_path(file_name):
+    script_path = os.path.dirname(os.path.realpath(__file__))
+    return os.path.join(script_path, file_name)
 
 if __name__ == '__main__':
     main()
