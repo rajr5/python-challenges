@@ -160,3 +160,6 @@ venv.bak/
 file_sort/input1.txt
 file_sort/input2.txt
 file_sort/output.txt
+
+# ignore VS code settings
+.vscode
