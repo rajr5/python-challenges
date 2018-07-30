@@ -67,7 +67,6 @@ def _output_sorted_data(connection, output_file_name):
 
 
 def _cleanup_db(database_name, connection):
-    cursor = connection.cursor()
     connection.commit()
     connection.close()
     os.remove(database_name)
